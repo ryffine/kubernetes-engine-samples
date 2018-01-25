@@ -22,6 +22,9 @@ import (
 	"log"
 	"net/http"
 	"os"
+    "code.google.com/p/go-tour/pic"
+    "image"
+    "image/color"
 )
 
 func main() {
@@ -44,5 +47,30 @@ func hello(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "This is mew and mewtwo.\n")
 	fmt.Fprintf(w, "Version: 1.1.1\n")
 	fmt.Fprintf(w, "Hostname: %s\n", host)
+	    m := Image{256, 64}
+        pic.ShowImage(m)
+}
+
+type Image struct{
+    width int
+    height int
+}
+
+func (img Image) ColorModel() color.Model {
+    return color.RGBAModel
+}
+
+func (img Image) Bounds() image.Rectangle {
+    return image.Rect(0, 0, img.width, img.height)
+}
+
+func (img Image) At(x, y int) color.Color {
+    img_func := func(x, y int) uint8 {
+        //return uint8(x*y)
+        //return uint8((x+y) / 2)
+        return uint8(x^y)
+    }
+    v := img_func(x, y)
+    return color.RGBA{v, v, 255, 255}
 }
 // [END all]
